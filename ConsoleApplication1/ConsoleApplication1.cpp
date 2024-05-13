@@ -6,9 +6,11 @@
 #include <ctime> 
 
 using namespace std;
-
+enum sCompare {
+    before = -1, equal = 0, after = 1
+};
 struct sDate {
-    short numberOfDays, year, month ,day ;
+    short numberOfDays, year, month, day;
 };
 
 short ReadNumberOfYears() {
@@ -168,102 +170,90 @@ bool IsDate1LessThanDate2(sDate Date1, sDate Date2) {
     return (Date1.year < Date2.year) ? true : (Date1.month < Date2.month) ? true : (Date1.day < Date2.day) ? true : false;
 
 }
-bool IsDayEndOfWeek(short orderDay) {
-    cout << "   Is it End of Week?" << endl;
-    return orderDay == 6 ? 1 : 0;
-}
-bool IsDayWeekEnd(short orderDay) {
-    /*cout << "   Is it WeekEnd?" << endl;*/
-    return (orderDay == 6 || orderDay == 5) ? 1 : 0;
-}
-bool IsDayBusiness(short orderDay) {
-    cout << "   Is it Business Day?" << endl;
-    return (orderDay == 6 || orderDay == 5) ? 0 : 1;
-}
-short IsDayUntilEndOfWeek(short orderDay) {
-    
-    return (orderDay == 6) ? 0 : (orderDay == 5) ? 1 : (6 - orderDay);
-}
-short IsDayUntilEndOfMonth(sDate Date) {
-    
-    return (NumberOfDaysInMonth(Date.month, Date.year) - Date.day) + 1;
-}
-short IsDayUntilEndOfYear(sDate Date) {
 
-    return CheckLeapYear(Date.year) ? (366 - GetNumberOfDaysBegining(Date.day, Date.month, Date.year) + 1) : (365 - GetNumberOfDaysBegining(Date.day, Date.month, Date.year) + 1);
+bool IsDate1EqualToDate2(sDate Date1, sDate Date2) {
+
+
+    return (Date1.year == Date2.year) ? (Date1.month == Date2.month) ? (Date1.day == Date2.day) : false : false;
+
 }
 
-short ActucalVacationDays(sDate Date1, sDate Date2) {
-    short vacation = 0;
+sCompare CompareTwoDate(sDate Date1, sDate Date2) {
+   
 
+    if (IsDate1LessThanDate2(Date1, Date2))
+    {
+        return sCompare::before;
+    }else if (IsDate1EqualToDate2(Date1,Date2))
+    {
+        return sCompare::equal;
+    }
+    else
+    {
+        return sCompare::after;
+    }
+}
+
+bool GetPeriodsOverlapTwoPeriods(sDate Date1, sDate Date2, sDate Date3, sDate Date4) {
+
+    return ((IsDate1LessThanDate2(Date3, Date1) && (IsDate1LessThanDate2(Date4, Date1))) || ((IsDate1LessThanDate2(Date1, Date3) && (IsDate1LessThanDate2(Date2, Date3))))) ? true: false;
+}
+
+
+
+short GetPeriodLength(sDate Date1, sDate Date2, bool IncludingEndDate = true) {
+    short periodDate = 0;
     while (IsDate1LessThanDate2(Date1,Date2))
     {
-        
-        if (IsDayWeekEnd(GetOrderOfDayInWeek(Date1.day,Date1.month,Date2.year)))
-        {
-            Date1 = IncreaseDateAfterAddingOneDay(Date1);
-        }
-        else
-        {
-            Date1 = IncreaseDateAfterAddingOneDay(Date1);
-            vacation++;
-        }
+        Date1 = IncreaseDateAfterAddingOneDay(Date1);
+        periodDate++;
     }
 
-    return vacation;
+    return IncludingEndDate ? periodDate : ++periodDate;
 }
 
-sDate ReturnDateFromVacationDays(sDate Date1, short VacationDays) {
+bool CheckDateWithinPeriods(sDate Date1, sDate Date2, sDate Date3) {
 
-   
+    short period = GetPeriodLength(Date1, Date2, true);
 
-
-    for (short i = 0; i < VacationDays; i++)
+    for (short i = 0; i < period; i++)
     {
-        if (IsDayWeekEnd(GetOrderOfDayInWeek(Date1.day, Date1.month, Date1.year)))
+        if (IsDate1EqualToDate2(Date1, Date3))
         {
-            Date1 = IncreaseDateAfterAddingOneDay(Date1);
-
-            Date1 = IncreaseDateAfterAddingOneDay(Date1);
-
-            Date1 = IncreaseDateAfterAddingOneDay(Date1);
-
+            return true;
+            break;
         }
-        else
-        {
-            Date1 = IncreaseDateAfterAddingOneDay(Date1);
-            
-        }
+        Date1 = IncreaseDateAfterAddingOneDay(Date1);
     }
-   
-    Date1 = DecreaseDateByOneDay(Date1);
+    return false;
 
-    return Date1;
 }
-
-
-
-
-
-
-
 int main()
 {
-   cout << "Vaction Starts: " << endl;
+
+   cout << "Enter Period 1: " << endl;
+   cout << "Enter Start Date: " << endl;
+   cout << "\n";
    sDate Date1 = ReadFullDate();
-   short VacationDays = 0;
-   cout << "\n\n";
-   cout << "Please enter vacation days? ";
-   cin >> VacationDays;
-   Date1 = ReturnDateFromVacationDays(Date1, VacationDays);
-   cout << "\n\n";
-   cout << "Return Date is: " << GetNameOfDay(GetOrderOfDayInWeek(Date1.day, Date1.month, Date1.year)) << " , " << Date1.day << "/" << Date1.month << "/" << Date1.year << endl;
-
-
-    system("pause>0");
+   cout << "\n";
+   cout << "Enter End Date: " << endl;
+   cout << "\n";
+   sDate Date2 = ReadFullDate();
+   cout << "\n";
+   cout << "Enter Date To check: " << endl;
+   cout << "\n";
+   sDate Date3 = ReadFullDate();
+   cout << "\n";
+   if (CheckDateWithinPeriods(Date1,Date2,Date3))
+   {
+       cout << "Yes, Date is within period: " << endl;
+   }
+   else
+   {
+       cout << "No, Date is Not within period: " << endl;
+   }
+     system("pause>0");
 
     return 0;
 
 }
-
-
