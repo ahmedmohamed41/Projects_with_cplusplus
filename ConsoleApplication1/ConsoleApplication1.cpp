@@ -199,8 +199,6 @@ bool GetPeriodsOverlapTwoPeriods(sDate Date1, sDate Date2, sDate Date3, sDate Da
     return ((IsDate1LessThanDate2(Date3, Date1) && (IsDate1LessThanDate2(Date4, Date1))) || ((IsDate1LessThanDate2(Date1, Date3) && (IsDate1LessThanDate2(Date2, Date3))))) ? true: false;
 }
 
-
-
 short GetPeriodLength(sDate Date1, sDate Date2, bool IncludingEndDate = true) {
     short periodDate = 0;
     while (IsDate1LessThanDate2(Date1,Date2))
@@ -228,6 +226,19 @@ bool CheckDateWithinPeriods(sDate Date1, sDate Date2, sDate Date3) {
     return false;
 
 }
+
+short GetOverlapDaysCounts(sDate Date1, sDate Date2, sDate Date3, sDate Date4) {
+
+    if (IsDate1LessThanDate2(Date3,Date2) && IsDate1LessThanDate2(Date2, Date4))
+    {
+        return GetPeriodLength(Date3, Date2);
+    }
+    else
+    {
+        return 0;
+    }
+   
+}
 int main()
 {
 
@@ -240,18 +251,19 @@ int main()
    cout << "\n";
    sDate Date2 = ReadFullDate();
    cout << "\n";
-   cout << "Enter Date To check: " << endl;
+   cout << "Enter Period 2: " << endl;
+   cout << "Enter Start Date: " << endl;
    cout << "\n";
    sDate Date3 = ReadFullDate();
    cout << "\n";
-   if (CheckDateWithinPeriods(Date1,Date2,Date3))
-   {
-       cout << "Yes, Date is within period: " << endl;
-   }
-   else
-   {
-       cout << "No, Date is Not within period: " << endl;
-   }
+   cout << "Enter End Date: " << endl;
+   cout << "\n";
+   sDate Date4 = ReadFullDate();
+   cout << "\n";
+
+
+   cout << "Overlap Days Count is: " << GetOverlapDaysCounts(Date1, Date2, Date3, Date4) << endl;
+
      system("pause>0");
 
     return 0;
