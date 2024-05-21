@@ -7,9 +7,11 @@
 #include <vector> 
 
 using namespace std;
+
 enum sCompare {
     before = -1, equal = 0, after = 1
 };
+
 struct sDate {
     short numberOfDays, year, month, day;
 };
@@ -277,24 +279,53 @@ string ConvertDateToString(sDate Date) {
 
     return (to_string(Date.day) + "/" + to_string(Date.month)+"/" + to_string(Date.year));
 }
+string FormatDateUpDate(sDate Date, string numFormat) {
+
+
+    if (numFormat == "dd/mm/yyyy")
+
+        return (to_string(Date.day) + "/" + to_string(Date.month) + "/" + to_string(Date.year));
+
+    else if (numFormat == "yyyy/dd/mm")
+
+        return (to_string(Date.year) + "/" + to_string(Date.day) + "/" + to_string(Date.month));
+
+    else if (numFormat == "mm/dd/yyyy")
+
+        return (to_string(Date.month) + "/" + to_string(Date.day) + "/" + to_string(Date.year));
+
+    else if (numFormat == "mm-dd-yyyy")
+        return (to_string(Date.month) + "-" + to_string(Date.day) + "-" + to_string(Date.year));
+
+    else if (numFormat == "dd-mm-yyyy")
+        return (to_string(Date.day) + "-" + to_string(Date.month) + "-" + to_string(Date.year));
+
+    else if (numFormat == "Day:dd, Month:mm, Year:yyyy")
+        return ("Day:" + to_string(Date.day) + ", " + "Month:" + to_string(Date.month) + ", " + "Year:" + to_string(Date.year));
+
+    else
+        return (to_string(Date.day) + "/" + to_string(Date.month) + "/" + to_string(Date.year));
+
+}
+    
+
 int main()
 {
     sDate Date1;
 
     string DateString;
 
-    cout << "Please Enter Date dd/mm/yyyy ? ";
+    cout << "  Please Enter Date dd/mm/yyyy ? ";
     cin >> DateString;
    cout << "\n";
  
    Date1 = ConvertStringToDate(DateString);
-  
-   cout << "Day:" << Date1.day << endl;
-   cout << "Month:" << Date1.month << endl;
-
-   cout << "Year:" << Date1.year << endl;
-
-   cout << "You Entered: " << ConvertDateToString (Date1)<< endl;
+   cout << "\n";
+   cout <<"  "<< FormatDateUpDate(Date1, "dd/mm/yyyy") << endl;
+   cout << "\n";
+   cout << "  " << FormatDateUpDate(Date1, "yyyy/dd/mm")<< endl;
+   cout << "\n";
+   cout << "  " << FormatDateUpDate(Date1, "mm-dd-yyyy")<< endl;
 
     system("pause>0");
 
